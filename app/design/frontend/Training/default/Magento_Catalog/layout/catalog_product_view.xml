@@ -20,8 +20,14 @@
         <referenceBlock name="product.info.addtocart" template="Magento_Catalog::product/view/trainingpdp/addtocart.phtml"/>
         <referenceBlock name="product.info.addtocart.additional" template="Magento_Catalog::product/view/trainingpdp/addtocart.phtml"/>
 
-        <!-- Wishlist heart sits top-right next to the title -->
-        <move element="product.info.social" destination="product.info.main" before="-"/>
+        <!-- Wishlist heart next to Add to Cart (guests too); replaces Luma's wishlist link at the top -->
+        <referenceBlock name="product.info.addtocart">
+            <block class="Magento\Catalog\Block\Product\View" name="tpdp.wishlist" template="Magento_Wishlist::product/view/guest-button.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="product.info.addtocart.additional">
+            <block class="Magento\Catalog\Block\Product\View" name="tpdp.wishlist.additional" template="Magento_Wishlist::product/view/guest-button.phtml"/>
+        </referenceBlock>
+        <referenceContainer name="product.info.social" remove="true"/>
 
         <referenceContainer name="product.info.main">
             <block class="Magento\Catalog\Block\Product\View" name="tpdp.bnpl" template="Magento_Catalog::product/view/trainingpdp/bnpl.phtml" after="product.info"/>

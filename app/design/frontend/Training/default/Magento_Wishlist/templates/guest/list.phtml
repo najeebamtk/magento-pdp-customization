@@ -1,0 +1,31 @@
+<?php
+/**
+ * Guest wishlist page (CMS page "guest-wishlist"). Items come from the browser, see Magento_Wishlist/js/guest-page.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$config = [
+    'addToCartUrl' => $block->getUrl('checkout/cart/add'),
+    'labels' => [
+        'addToCart' => __('Add to Cart'),
+        'remove' => __('Remove'),
+    ],
+];
+?>
+<div class="guest-wishlist"
+     data-mage-init='<?= $escaper->escapeHtmlAttr(json_encode(['Magento_Wishlist/js/guest-page' => $config])) ?>'>
+    <p class="guest-wishlist__intro">
+        <?= $escaper->escapeHtml(__('These products are saved on this browser.')) ?>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>"><?= $escaper->escapeHtml(__('Log in')) ?></a>
+        <?= $escaper->escapeHtml(__('to keep them in your account.')) ?>
+    </p>
+    <ul class="guest-wishlist__items" data-role="wishlist-items"></ul>
+    <p class="guest-wishlist__empty" data-role="wishlist-empty" hidden>
+        <?= $escaper->escapeHtml(__('Your wishlist is empty.')) ?>
+    </p>
+    <p class="guest-wishlist__logged-in" data-role="wishlist-logged-in" hidden>
+        <?= $escaper->escapeHtml(__('You are logged in. Your saved products are in')) ?>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('wishlist')) ?>"><?= $escaper->escapeHtml(__('My Wishlist')) ?></a>.
+    </p>
+</div>

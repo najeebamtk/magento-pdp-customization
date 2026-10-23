@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Only for the CMS page with URL key "guest-wishlist": adds the browser-wishlist list.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="guest.wishlist.list" template="Magento_Wishlist::guest/list.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

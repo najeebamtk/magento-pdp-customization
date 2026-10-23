@@ -1,0 +1,191 @@
+//
+//  Wishlist that also works for guests: header heart + count, PDP heart button, guest wishlist page
+//  _____________________________________________
+
+@gwl-font: 'Jost', 'Futura', 'Century Gothic', sans-serif;
+@gwl-ink: #000;
+@gwl-line: #dcdcdc;
+
+& when (@media-common = true) {
+    //  Header heart with item count (same badge as the mini cart)
+    .thdr-icon--wishlist {
+        position: relative;
+
+        .thdr-icon__count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            box-sizing: border-box;
+            font-family: @gwl-font;
+            font-size: 11px;
+            line-height: 16px;
+            text-align: center;
+            color: #fff;
+            background: @gwl-ink;
+            border-radius: 8px;
+
+            &[hidden] {
+                display: none;
+            }
+        }
+    }
+
+    //  PDP: square heart button next to Add to Cart
+    .guest-wishlist-pdp {
+        display: contents;
+    }
+
+    .guest-wishlist-pdp__button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 50px;
+        width: 50px;
+        // margin, not flex gap: the row also holds empty PayPal/Braintree shortcut containers
+        margin-left: 8px;
+        height: 50px;
+        padding: 0;
+        color: @gwl-ink;
+        background: #fff;
+        border: 1px solid @gwl-ink;
+        border-radius: 0;
+        box-shadow: none;
+
+        &:hover,
+        &:focus {
+            color: @gwl-ink;
+            background: #f5f5f5;
+            border-color: @gwl-ink;
+        }
+
+        &.is-active svg {
+            fill: currentColor;
+        }
+    }
+
+    .guest-wishlist-pdp__text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+    }
+
+    .guest-wishlist-pdp__note {
+        flex-basis: 100%;
+        margin: 12px 0 0;
+        font-family: @gwl-font;
+        font-size: 14px;
+        font-weight: 300;
+        color: @gwl-ink;
+
+        &[hidden] {
+            display: none;
+        }
+
+        a {
+            color: @gwl-ink;
+            text-decoration: underline;
+        }
+    }
+
+    //  Guest wishlist page
+    .guest-wishlist {
+        font-family: @gwl-font;
+        color: @gwl-ink;
+
+        [hidden] {
+            display: none;
+        }
+
+        a {
+            color: @gwl-ink;
+            text-decoration: underline;
+        }
+    }
+
+    .guest-wishlist__intro,
+    .guest-wishlist__empty,
+    .guest-wishlist__logged-in {
+        font-size: 16px;
+        font-weight: 300;
+    }
+
+    .guest-wishlist__items {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 30px 20px;
+        margin: 30px 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .guest-wishlist__item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 0;
+
+        .guest-wishlist__image {
+            display: block;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .guest-wishlist .guest-wishlist__name {
+        font-size: 16px;
+        text-decoration: none;
+    }
+
+    .guest-wishlist__price {
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .guest-wishlist__tocart,
+    .guest-wishlist__remove {
+        width: 100%;
+        height: 44px;
+        font-family: @gwl-font;
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: uppercase;
+        border: 1px solid @gwl-ink;
+        border-radius: 0;
+    }
+
+    .guest-wishlist__tocart {
+        color: #fff;
+        background: @gwl-ink;
+
+        &:hover,
+        &:focus {
+            color: #fff;
+            background: #222;
+            border-color: #222;
+        }
+    }
+
+    .guest-wishlist__remove {
+        color: @gwl-ink;
+        background: #fff;
+
+        &:hover,
+        &:focus {
+            color: @gwl-ink;
+            background: #f5f5f5;
+            border-color: @gwl-ink;
+        }
+    }
+}

@@ -1,0 +1,43 @@
+<?php
+/**
+ * Heart button next to Add to Cart (works for guests too, see Magento_Wishlist/js/pdp-button).
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+/** @var \Magento\Wishlist\Helper\Data $wishlistHelper */
+$wishlistHelper = $this->helper(\Magento\Wishlist\Helper\Data::class);
+if (!$wishlistHelper->isAllow()) {
+    return;
+}
+$product = $block->getProduct();
+$config = [
+    'product' => [
+        'id' => (string)$product->getId(),
+        'name' => $product->getName(),
+        'url' => $product->getProductUrl(),
+        'image' => $block->getImage($product, 'category_page_grid')->getImageUrl(),
+        'price' => $this->helper(\Magento\Framework\Pricing\Helper\Data::class)
+            ->currency($product->getFinalPrice(), true, false),
+    ],
+    'addParams' => json_decode($wishlistHelper->getAddParams($product), true),
+    'labels' => [
+        'add' => __('Add to Wishlist'),
+        'remove' => __('Remove from Wishlist'),
+    ],
+];
+?>
+<div class="guest-wishlist-pdp"
+     data-mage-init='<?= $escaper->escapeHtmlAttr(json_encode(['Magento_Wishlist/js/pdp-button' => $config])) ?>'>
+    <button type="button" class="guest-wishlist-pdp__button" data-role="wishlist-toggle" aria-pressed="false"
+            title="<?= $escaper->escapeHtmlAttr(__('Add to Wishlist')) ?>">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.4 4.5 6.9 4.5c2.1 0 3.6 1.1 5.1 3 1.5-1.9 3-3 5.1-3 3.5 0 5.5 3.5 4.2 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/>
+        </svg>
+        <span class="guest-wishlist-pdp__text"><?= $escaper->escapeHtml(__('Add to Wishlist')) ?></span>
+    </button>
+    <p class="guest-wishlist-pdp__note" data-role="wishlist-note" hidden>
+        <?= $escaper->escapeHtml(__('Saved to your wishlist.')) ?>
+        <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => 'guest-wishlist'])) ?>"><?= $escaper->escapeHtml(__('View wishlist')) ?></a>
+    </p>
+</div>

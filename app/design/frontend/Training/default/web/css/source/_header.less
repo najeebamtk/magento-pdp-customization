@@ -170,7 +170,7 @@
             }
         }
 
-        // all icons in one row, ordered globe · account · cart · store locator
+        // all icons in one row, ordered globe · account · wishlist · cart · store locator
         .thdr-icons {
             display: contents;
         }
@@ -185,14 +185,19 @@
             margin-left: 35px;
         }
 
+        .thdr-icon--wishlist {
+            order: 4;
+            margin-left: 35px;
+        }
+
         .minicart-wrapper {
             float: none;
-            order: 4;
+            order: 5;
             margin: 0 0 0 35px;
         }
 
         .thdr-icon--locator {
-            order: 5;
+            order: 6;
             margin-left: 35px;
         }
     }
@@ -354,6 +359,12 @@
             position: absolute;
             top: 22px;
             right: 95px;
+        }
+
+        .thdr-icon--wishlist {
+            position: absolute;
+            top: 22px;
+            right: 135px;
         }
     }
 }
