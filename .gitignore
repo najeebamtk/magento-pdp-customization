@@ -10,5 +10,11 @@
 # Generated static files
 /pub/static/
 
+# User-uploaded media (product images, image caches)
+/pub/media/
+
+# Magento's own internal QA test suite (not project code)
+/dev/tests/
+
 # Runtime files and cache
 /var/
