@@ -30,5 +30,37 @@
         </referenceContainer>
 
         <referenceBlock name="catalog.compare.link" remove="true"/>
+
+        <!-- Footer: 4 link columns + newsletter in one row, then social icons, popular searches -->
+        <referenceContainer name="footer">
+            <container name="tftr.grid" htmlTag="div" htmlClass="tftr-grid" before="-">
+                <block class="Magento\Cms\Block\Block" name="tftr.columns">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">footer_columns</argument>
+                    </arguments>
+                </block>
+                <container name="tftr.newsletter" htmlTag="div" htmlClass="tftr-col tftr-col--newsletter" after="tftr.columns">
+                    <block class="Magento\Framework\View\Element\Template" name="tftr.newsletter.heading" template="Magento_Theme::html/footer-heading.phtml">
+                        <arguments>
+                            <argument name="heading" xsi:type="string" translate="true">Sign Up for Newsletter</argument>
+                        </arguments>
+                    </block>
+                </container>
+            </container>
+            <block class="Magento\Cms\Block\Block" name="tftr.social" after="tftr.grid">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">footer_social</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Cms\Block\Block" name="tftr.popular" after="tftr.social">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">footer_popular_searches</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <!-- Magento's own newsletter form becomes the 5th column -->
+        <move element="form.subscribe" destination="tftr.newsletter" after="tftr.newsletter.heading"/>
+        <referenceBlock name="footer_links" remove="true"/>
     </body>
 </page>

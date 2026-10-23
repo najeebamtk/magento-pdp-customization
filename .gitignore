@@ -13,6 +13,9 @@
 # User-uploaded media (product images, image caches)
 /pub/media/
 
+# Runtime cache written by pub/get.php
+/pub/opt/
+
 # Magento's own internal QA test suite (not project code)
 /dev/tests/
 
