@@ -29,7 +29,7 @@ HTML;
 ?>
 <?php if ($final > 0): ?>
     <div class="tpdp-bnpl" data-mage-init='{"Magento_Catalog/js/bnpl-popup": {}}'>
-        <div class="tpdp-bnpl__box tpdp-bnpl__box--tabby">
+        <div class="tpdp-bnpl__box tpdp-bnpl__box--tabby" data-bnpl-open="tabby">
             <p>
                 <?= $escaper->escapeHtml(__('As low as')) ?>
                 <strong><?= /* @noEscape */ $money($lowestMonthly) ?>/month</strong>
@@ -40,7 +40,7 @@ HTML;
             </p>
             <button type="button" class="tpdp-bnpl__logo tpdp-bnpl__logo--tabby" data-bnpl-open="tabby">tabby</button>
         </div>
-        <div class="tpdp-bnpl__box tpdp-bnpl__box--tamara">
+        <div class="tpdp-bnpl__box tpdp-bnpl__box--tamara" data-bnpl-open="tamara">
             <p>
                 <?= $escaper->escapeHtml(__('From')) ?>
                 <strong><?= /* @noEscape */ $money($lowestMonthly) ?></strong>/Month
