@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Web fonts used by the 2xlhome-style header and product page (Jost stands in for Futura).
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&amp;family=Poppins:wght@400;700&amp;family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@400;500&amp;family=Montserrat:wght@400&amp;display=swap" src_type="url"/>
+    </head>
+</page>

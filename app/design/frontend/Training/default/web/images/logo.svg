@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 80" width="58" height="80">
+    <g fill="#000">
+        <!-- "TH" wordmark (Training Home) -->
+        <path d="M2 6h22v7h-7.5v44H9.5V13H2z"/>
+        <path d="M28 6h7v21h9V6h7v51h-7V34h-9v23h-7z"/>
+        <text x="29" y="72" font-family="Arial, Helvetica, sans-serif" font-size="8.5" letter-spacing="2" text-anchor="middle">HOME</text>
+    </g>
+</svg>

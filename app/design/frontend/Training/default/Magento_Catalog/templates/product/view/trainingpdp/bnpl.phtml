@@ -1,0 +1,210 @@
+<?php
+/**
+ * Buy-now-pay-later instalment boxes and their "Learn more" / "More options" popups
+ * (display only, no payment integration). Plan amounts follow the fee percentages
+ * shown on 2xlhome.com: tabby 6/8/12 payments +5/9/17%, tamara 9/12 payments +17%.
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$final = (float)$block->getProduct()->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+/** @var \Magento\Framework\Pricing\Helper\Data $priceHelper */
+$priceHelper = $this->helper(\Magento\Framework\Pricing\Helper\Data::class);
+$money = fn (float $amount) => $priceHelper->currency($amount, true, false);
+
+// [number of payments => fee %]
+$tabbyPlans = [4 => 0, 6 => 5, 8 => 9, 12 => 17];
+$tamaraPlans = [2 => 0, 3 => 0, 4 => 0, 6 => 0, 9 => 17, 12 => 17];
+$monthly = fn (int $payments, int $fee) => $final * (1 + $fee / 100) / $payments;
+$lowestMonthly = $monthly(12, 17);
+
+$cards = <<<'HTML'
+<span class="tpdp-cards" aria-hidden="true">
+    <span class="tpdp-card tpdp-card--mc"><i></i><i></i></span>
+    <span class="tpdp-card tpdp-card--visa">VISA</span>
+    <span class="tpdp-card">Pay</span>
+    <span class="tpdp-card tpdp-card--gpay">G Pay</span>
+</span>
+HTML;
+?>
+<?php if ($final > 0): ?>
+    <div class="tpdp-bnpl" data-mage-init='{"Magento_Catalog/js/bnpl-popup": {}}'>
+        <div class="tpdp-bnpl__box tpdp-bnpl__box--tabby">
+            <p>
+                <?= $escaper->escapeHtml(__('As low as')) ?>
+                <strong><?= /* @noEscape */ $money($lowestMonthly) ?>/month</strong>
+                <?= $escaper->escapeHtml(__('or 4 interest-free payments.')) ?>
+                <button type="button" class="tpdp-bnpl__more" data-bnpl-open="tabby">
+                    <?= $escaper->escapeHtml(__('Learn more')) ?>
+                </button>
+            </p>
+            <button type="button" class="tpdp-bnpl__logo tpdp-bnpl__logo--tabby" data-bnpl-open="tabby">tabby</button>
+        </div>
+        <div class="tpdp-bnpl__box tpdp-bnpl__box--tamara">
+            <p>
+                <?= $escaper->escapeHtml(__('From')) ?>
+                <strong><?= /* @noEscape */ $money($lowestMonthly) ?></strong>/Month
+                <?= $escaper->escapeHtml(__('for up to 12 months, no late fees!')) ?>
+                <button type="button" class="tpdp-bnpl__link" data-bnpl-open="tamara">
+                    <?= $escaper->escapeHtml(__('More options')) ?>
+                </button>
+            </p>
+            <button type="button" class="tpdp-bnpl__logo tpdp-bnpl__logo--tamara" data-bnpl-open="tamara">tamara</button>
+        </div>
+
+        <!-- tabby popup -->
+        <div class="tpdp-popup tpdp-popup--tabby" data-bnpl-popup="tabby" role="dialog" aria-modal="true"
+             aria-label="<?= $escaper->escapeHtmlAttr(__('Pay with tabby')) ?>" hidden>
+            <div class="tpdp-popup__backdrop" data-bnpl-close></div>
+            <div class="tpdp-popup__dialog">
+                <div class="tpdp-popup__head">
+                    <span class="tpdp-tabby-wordmark">tabby</span>
+                    <button type="button" class="tpdp-popup__close" data-bnpl-close
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Close')) ?>">&times;</button>
+                </div>
+                <div class="tpdp-tabby-hero" aria-hidden="true">
+                    <svg viewBox="0 0 200 120" width="220" height="132">
+                        <ellipse cx="100" cy="108" rx="52" ry="7" fill="#1d1d1b"/>
+                        <circle cx="100" cy="60" r="42" fill="#e0a7f5" stroke="#1d1d1b" stroke-width="2"/>
+                        <path d="M100 60V18a42 42 0 0 1 36 20z" fill="#f2c94c" stroke="#1d1d1b" stroke-width="2"/>
+                        <path d="M100 60 136 38a42 42 0 0 1 6 22z" fill="#c9e0ff" stroke="#1d1d1b" stroke-width="2"/>
+                        <path d="M100 60H58a42 42 0 0 1 12-30z" fill="#fff" stroke="#1d1d1b" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3 class="tpdp-tabby-title"><?= $escaper->escapeHtml(__('Get more time to pay')) ?></h3>
+                <p class="tpdp-tabby-sub"><?= $escaper->escapeHtml(__('Split your purchase in up to 12 payments')) ?></p>
+
+                <?php foreach ($tabbyPlans as $payments => $fee): ?>
+                    <?php $perMonth = $monthly($payments, $fee); ?>
+                    <div class="tpdp-tabby-card tpdp-tabby-plan">
+                        <div>
+                            <span><?= (int)$payments ?> <?= $escaper->escapeHtml(__('payments')) ?></span>
+                            <?php if ($fee === 0): ?>
+                                <small class="tpdp-tabby-plan__free"><?= $escaper->escapeHtml(__('No interest. No fees.')) ?></small>
+                            <?php else: ?>
+                                <small>
+                                    <?= $escaper->escapeHtml(__('Includes')) ?>
+                                    <?= /* @noEscape */ $money($perMonth * $payments - $final) ?>
+                                    <?= $escaper->escapeHtml(__('in total fees')) ?>
+                                </small>
+                            <?php endif; ?>
+                        </div>
+                        <strong><?= /* @noEscape */ $money($perMonth) ?>/mo</strong>
+                    </div>
+                <?php endforeach; ?>
+
+                <div class="tpdp-tabby-card">
+                    <h4><?= $escaper->escapeHtml(__('How it works')) ?></h4>
+                    <ol class="tpdp-tabby-steps">
+                        <li><?= $escaper->escapeHtml(__('Choose Tabby at checkout to select a payment plan')) ?></li>
+                        <li><?= $escaper->escapeHtml(__('Enter your information and add your debit or credit card')) ?></li>
+                        <li><?= $escaper->escapeHtml(__('Depending on your plan, you may or may not make a down payment')) ?></li>
+                        <li><?= $escaper->escapeHtml(__('We\'ll send you a reminder when your next payment is due')) ?></li>
+                    </ol>
+                </div>
+                <div class="tpdp-tabby-card tpdp-tabby-feature">
+                    <span class="tpdp-tabby-feature__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3b82f6" stroke-width="1.6"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19c.5-3.5 3.2-5.5 6.5-5.5s6 2 6.5 5.5M15.5 4.8a3.5 3.5 0 0 1 0 6.4M18 13.8c1.9.8 3.2 2.6 3.5 5.2"/></svg>
+                    </span>
+                    <div>
+                        <strong><?= $escaper->escapeHtml(__('Trusted by millions')) ?></strong>
+                        <small><?= $escaper->escapeHtml(__('Over 20 million shoppers discover products and pay their way with Tabby')) ?></small>
+                    </div>
+                </div>
+                <div class="tpdp-tabby-card tpdp-tabby-feature">
+                    <span class="tpdp-tabby-feature__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#3b82f6"/><path d="m7.5 12.3 3 3 6-6.3" fill="none" stroke="#fff" stroke-width="2"/></svg>
+                    </span>
+                    <div>
+                        <strong><?= $escaper->escapeHtml(__('Shop safely with Tabby')) ?></strong>
+                        <small><?= $escaper->escapeHtml(__('Buyer protection is included with every purchase')) ?></small>
+                    </div>
+                </div>
+                <button type="button" class="tpdp-tabby-continue" data-bnpl-close>
+                    <?= $escaper->escapeHtml(__('Continue shopping')) ?>
+                </button>
+                <?= /* @noEscape */ $cards ?>
+            </div>
+        </div>
+
+        <!-- tamara popup -->
+        <div class="tpdp-popup tpdp-popup--tamara" data-bnpl-popup="tamara" role="dialog" aria-modal="true"
+             aria-label="<?= $escaper->escapeHtmlAttr(__('Pay with tamara')) ?>" hidden>
+            <div class="tpdp-popup__backdrop" data-bnpl-close></div>
+            <div class="tpdp-popup__dialog">
+                <button type="button" class="tpdp-popup__close" data-bnpl-close
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Close')) ?>">&times;</button>
+                <div class="tpdp-tamara-top">
+                    <span class="tpdp-bnpl__logo tpdp-bnpl__logo--tamara">tamara</span>
+                    <h3 class="tpdp-tamara-title"><?= $escaper->escapeHtml(__('Your payment,')) ?><br><?= $escaper->escapeHtml(__('your pace')) ?></h3>
+                    <p class="tpdp-tamara-sub">
+                        <?= $escaper->escapeHtml(__('Pay as low as')) ?>
+                        <strong><?= /* @noEscape */ $money($lowestMonthly) ?>/mo</strong>,
+                        <?= $escaper->escapeHtml(__('or in 12 payments')) ?>
+                    </p>
+                    <p class="tpdp-tamara-label"><?= $escaper->escapeHtml(__('Example plans')) ?></p>
+
+                    <?php foreach ($tamaraPlans as $payments => $fee): ?>
+                        <div class="tpdp-tamara-plan">
+                            <div>
+                                <strong><?= /* @noEscape */ $money($monthly($payments, $fee)) ?>/mo</strong>
+                                <?php if ($payments <= 3): ?>
+                                    <small class="tpdp-tamara-plan__note"><?= $escaper->escapeHtml(__('No fees')) ?></small>
+                                <?php else: ?>
+                                    <small><?= $escaper->escapeHtml(__('Fees may apply')) ?></small>
+                                <?php endif; ?>
+                            </div>
+                            <span class="tpdp-tamara-pill"><?= (int)$payments ?> <?= $escaper->escapeHtml(__('Payments')) ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                    <div class="tpdp-tamara-plan">
+                        <div>
+                            <strong><?= /* @noEscape */ $money($final) ?></strong>
+                            <small class="tpdp-tamara-plan__note"><?= $escaper->escapeHtml(__('1% cashback and buyer protection')) ?></small>
+                        </div>
+                        <span class="tpdp-tamara-pill"><?= $escaper->escapeHtml(__('Pay in Full')) ?></span>
+                    </div>
+
+                    <div class="tpdp-tamara-how">
+                        <h4><?= $escaper->escapeHtml(__('How it works?')) ?></h4>
+                        <ol>
+                            <li>
+                                <strong><?= $escaper->escapeHtml(__('Pick a plan that works for you')) ?></strong>
+                                <small><?= $escaper->escapeHtml(__('Choose Tamara at checkout and select the payment plan that fits your needs.')) ?></small>
+                            </li>
+                            <li>
+                                <strong><?= $escaper->escapeHtml(__('Pay your first payment securely')) ?></strong>
+                                <small><?= $escaper->escapeHtml(__('Enter your card details to make your first payment safely and instantly.')) ?></small>
+                            </li>
+                            <li>
+                                <strong><?= $escaper->escapeHtml(__('Stay in control')) ?></strong>
+                                <small><?= $escaper->escapeHtml(__('Track and manage all your upcoming payments easily in the Tamara app.')) ?></small>
+                            </li>
+                            <li>
+                                <strong><?= $escaper->escapeHtml(__('We’ve got your back')) ?></strong>
+                                <small><?= $escaper->escapeHtml(__('Get helpful reminders before each payment, no surprises.')) ?></small>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="tpdp-tamara-why">
+                    <h4><?= $escaper->escapeHtml(__('Why Tamara?')) ?></h4>
+                    <div class="tpdp-tamara-why__items">
+                        <span>
+                            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2fd67b"/><circle cx="10" cy="9.5" r="2.6" fill="#0b3b22"/><path d="M5.5 17c.6-2.4 2.3-3.7 4.5-3.7s3.9 1.3 4.5 3.7z" fill="#0b3b22"/><path d="m14.5 10 1.6 1.6 3-3.2" fill="none" stroke="#0b3b22" stroke-width="1.6"/></svg>
+                            100%<br><?= $escaper->escapeHtml(__('buyer protection')) ?>
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#ffd6e7"/><rect x="6" y="8" width="12" height="8" rx="1.5" fill="#7a1747"/><path d="M5 6l14 12" stroke="#7a1747" stroke-width="1.6"/></svg>
+                            <?= $escaper->escapeHtml(__('No late')) ?><br><?= $escaper->escapeHtml(__('fees')) ?>
+                        </span>
+                    </div>
+                    <p class="tpdp-tamara-disclaimer">
+                        <?= $escaper->escapeHtml(__('Payment plans shown are estimates. Actual offers may vary based on your eligibility and order details. Not all merchants or products qualify for every plan, including Tamara\'s long-term financing options. Approval is subject to eligibility checks and may require a down payment. Final terms, including monthly payment amounts, may change after checkout review and may exclude taxes, shipping, or other charges.')) ?>
+                    </p>
+                    <?= /* @noEscape */ $cards ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,15 @@
+<?php
+/**
+ * "(-x% OFF)" note shown next to the price.
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$priceInfo = $block->getProduct()->getPriceInfo();
+$regular = (float)$priceInfo->getPrice('regular_price')->getAmount()->getValue();
+$final = (float)$priceInfo->getPrice('final_price')->getAmount()->getValue();
+$discount = ($regular > 0 && $final < $regular) ? (int)round((1 - $final / $regular) * 100) : 0;
+?>
+<?php if ($discount > 0): ?>
+    <span class="tpdp-discount-note"><?= $escaper->escapeHtml(__('(-%1% OFF)', $discount)) ?></span>
+<?php endif; ?>

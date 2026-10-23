@@ -1,0 +1,15 @@
+<?php
+/**
+ * Floating "Top" button: fades in after scrolling 300px, smooth-scrolls back to the top.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<a href="#" class="tpdp-backtop" data-mage-init='{"Magento_Catalog/js/back-to-top": {}}'
+   aria-label="<?= $escaper->escapeHtmlAttr(__('Back to top')) ?>">
+    <svg viewBox="0 0 24 40" width="22" height="36" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M12 39V2M2 12 12 2l10 10"/>
+    </svg>
+    <span><?= $escaper->escapeHtml(__('Top')) ?></span>
+</a>

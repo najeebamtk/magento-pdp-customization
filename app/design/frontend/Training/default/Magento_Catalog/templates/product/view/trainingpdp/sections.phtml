@@ -1,0 +1,54 @@
+<?php
+/**
+ * Collapsible "Product Description" (text + specification grid) and "Shipping and Returns" sections.
+ * Specifications list every attribute with "Visible on Catalog Pages on Storefront" = Yes;
+ * multi-line values (e.g. Care) are shown as bullet points.
+ *
+ * @var \Magento\Catalog\Block\Product\View\Attributes $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$product = $block->getProduct();
+/** @var \Magento\Catalog\Helper\Output $outputHelper */
+$outputHelper = $this->helper(\Magento\Catalog\Helper\Output::class);
+$description = (string)$product->getDescription();
+$specifications = $block->getAdditionalData();
+$shipping = $block->getChildHtml('shipping');
+?>
+<div class="tpdp-sections">
+    <?php if ($description !== '' || $specifications): ?>
+        <details class="tpdp-section" open>
+            <summary class="tpdp-section__title"><?= $escaper->escapeHtml(__('Product Description')) ?></summary>
+            <div class="tpdp-section__content">
+                <?= /* @noEscape */ $outputHelper->productAttribute($product, $description, 'description') ?>
+                <?php if ($specifications): ?>
+                    <dl class="tpdp-specs">
+                        <?php foreach ($specifications as $spec): ?>
+                            <?php $lines = array_filter(array_map('trim', explode("\n", (string)$spec['value']))); ?>
+                            <div class="tpdp-specs__item">
+                                <dt><?= $escaper->escapeHtml($spec['label']) ?>:</dt>
+                                <dd>
+                                    <?php if (count($lines) > 1 || $spec['code'] === 'care_instructions'): ?>
+                                        <ul>
+                                            <?php foreach ($lines as $line): ?>
+                                                <li><?= $escaper->escapeHtml($line) ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php else: ?>
+                                        <?= $escaper->escapeHtml($spec['value']) ?>
+                                    <?php endif; ?>
+                                </dd>
+                            </div>
+                        <?php endforeach; ?>
+                    </dl>
+                <?php endif; ?>
+            </div>
+        </details>
+    <?php endif; ?>
+
+    <?php if (trim($shipping) !== ''): ?>
+        <details class="tpdp-section">
+            <summary class="tpdp-section__title"><?= $escaper->escapeHtml(__('Shipping and Returns')) ?></summary>
+            <div class="tpdp-section__content"><?= /* @noEscape */ $shipping ?></div>
+        </details>
+    <?php endif; ?>
+</div>

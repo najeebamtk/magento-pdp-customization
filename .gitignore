@@ -1,0 +1,14 @@
+# Sensitive environment configuration
+/app/etc/env.php
+
+# Composer dependencies
+/vendor/
+
+# Generated Magento code
+/generated/
+
+# Generated static files
+/pub/static/
+
+# Runtime files and cache
+/var/

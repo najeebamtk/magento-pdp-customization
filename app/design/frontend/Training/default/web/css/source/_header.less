@@ -1,0 +1,359 @@
+//
+//  Site header styles (2xlhome.com style)
+//  Values measured from the live 2xlhome.com header at 1920px:
+//  black promo bar 46px, white logo/search/icons row 90px, category bar 44px — all stay on screen.
+//  _____________________________________________
+
+@thdr-font: 'Jost', 'Futura', 'Century Gothic', sans-serif;
+@thdr-promo-height: 46px;
+@thdr-row-height: 90px;
+@thdr-nav-height: 44px;
+@thdr-total-height: @thdr-promo-height + @thdr-row-height + @thdr-nav-height; // 180px
+@thdr-search-border: #d1d1d1;
+@thdr-nav-bg: #f8f8f8;
+
+& when (@media-common = true) {
+    //  Promo bar (black, right-aligned links with icons and white dividers)
+    .page-header .panel.wrapper {
+        background: #000;
+        border: 0;
+    }
+
+    .page-header .panel.header {
+        max-width: none;
+        padding: 0;
+
+        // Luma's welcome / sign-in links stay in the markup (the mobile menu copies them) but are hidden
+        > .header.links,
+        > .switcher {
+            display: none;
+        }
+    }
+
+    .thdr-promo {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: @thdr-promo-height;
+        margin: 0;
+        padding: 0 40px;
+        list-style: none;
+
+        li {
+            margin: 0;
+            padding: 0 0 0 25px;
+            line-height: 1;
+
+            &:not(:last-child) a {
+                padding-right: 12px;
+                border-right: 2px solid #fff;
+            }
+        }
+
+        a,
+        a:visited,
+        a:hover {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-family: @thdr-font;
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 23px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        svg {
+            flex: none;
+            width: 26px;
+            height: 26px;
+        }
+    }
+
+    .page-header {
+        margin-bottom: 0;
+        background: #fff;
+        border-bottom: 0;
+    }
+
+    //  Mini cart: thin outline cart icon instead of Luma's icon font
+    .minicart-wrapper .action.showcart {
+        &:before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.3' stroke-linejoin='round'%3E%3Cpath d='M1.5 3h3l2.6 12.2h12.1L21.5 7H6'/%3E%3Ccircle cx='9' cy='19.5' r='1.6'/%3E%3Ccircle cx='17.5' cy='19.5' r='1.6'/%3E%3Cpath d='M14 8.5v4M12 10.5h4'/%3E%3C/svg%3E") no-repeat center / 24px;
+        }
+
+        &.active:before,
+        &:hover:before {
+            content: '';
+        }
+
+        .counter.qty {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            min-width: 16px;
+            height: 16px;
+            margin: 0;
+            padding: 0 4px;
+            font-family: @thdr-font;
+            font-size: 11px;
+            line-height: 16px;
+            color: #fff;
+            background: #000;
+            border-radius: 8px;
+
+            &.empty {
+                display: none;
+            }
+        }
+    }
+
+    .thdr-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #000;
+
+        &:visited,
+        &:hover {
+            color: #000;
+            text-decoration: none;
+        }
+    }
+}
+
+//  Desktop: logo left, 700px search centred, icons right; flat category bar; whole header sticky
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    // these override Luma desktop rules (styles-l.css), so they must live in this desktop block
+    .page-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        margin-bottom: 0;
+        border-bottom: 0;
+
+        .panel.wrapper {
+            background: #000;
+            border-bottom: 0;
+        }
+
+        .panel.header {
+            max-width: none;
+            padding: 0;
+        }
+    }
+
+    .header.content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        max-width: none;
+        height: @thdr-row-height;
+        padding: 0 40px;
+        box-sizing: border-box;
+
+        .logo {
+            float: none;
+            order: 0;
+            margin: 0;
+            max-width: 77px;
+
+            img {
+                display: block;
+                width: 58px;
+                height: 80px;
+            }
+        }
+
+        // all icons in one row, ordered globe · account · cart · store locator
+        .thdr-icons {
+            display: contents;
+        }
+
+        .thdr-icon--globe {
+            order: 2;
+            margin-left: auto;
+        }
+
+        .thdr-icon--account {
+            order: 3;
+            margin-left: 35px;
+        }
+
+        .minicart-wrapper {
+            float: none;
+            order: 4;
+            margin: 0 0 0 35px;
+        }
+
+        .thdr-icon--locator {
+            order: 5;
+            margin-left: 35px;
+        }
+    }
+
+    // Search: 700px wide, centred in the row, grey magnifier on the left
+    .block-search {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 4;
+        float: none;
+        width: 700px;
+        max-width: calc(~'100% - 520px');
+        padding: 0;
+        transform: translate(-50%, -50%);
+
+        .control {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        input {
+            position: static;
+            height: 42px;
+            margin: 0;
+            padding: 0 15px 0 50px;
+            font-family: @thdr-font;
+            font-size: 16px;
+            color: #000;
+            background: #fff;
+            border: 1px solid @thdr-search-border;
+            border-radius: 0;
+
+            &::placeholder {
+                color: #a9a9a9;
+            }
+        }
+
+        .action.search {
+            top: 11px;
+            right: auto;
+            left: 18px;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            opacity: 1;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 57 57'%3E%3Cpath d='M55.1 51.9 41.6 37.8A23 23 0 0 0 47 23C47 10.3 36.7 0 24 0S1 10.3 1 23s10.3 23 23 23c4.8 0 9.3-1.4 13.2-4.2l13.7 14.2c.6.6 1.3.9 2.2.9.8 0 1.5-.3 2.1-.8a3 3 0 0 0 .1-4.2zM24 6c9.4 0 17 7.6 17 17s-7.6 17-17 17S7 32.4 7 23 14.6 6 24 6z' fill='%23a9a9a9'/%3E%3C/svg%3E") no-repeat center / 20px;
+
+            &:before {
+                display: none;
+            }
+
+            &[disabled] {
+                opacity: 1;
+            }
+        }
+    }
+
+    // Category bar: centred uppercase links, no dropdowns
+    .nav-sections {
+        position: sticky;
+        top: @thdr-promo-height + @thdr-row-height;
+        z-index: 19;
+        margin-bottom: 0;
+        background: @thdr-nav-bg;
+        border-top: 1px solid #000;
+    }
+
+    .navigation {
+        max-width: none;
+        padding: 0;
+        font-family: @thdr-font;
+        background: @thdr-nav-bg;
+
+        > ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .level0 {
+            margin: 0;
+
+            > .level-top {
+                padding: 12.6px 25.2px 12.6px 0;
+                font-family: @thdr-font;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 18.2px;
+                letter-spacing: .5px;
+                text-transform: uppercase;
+                color: #000;
+                text-decoration: none;
+
+                &:hover {
+                    color: #000;
+                    text-decoration: underline;
+                }
+            }
+
+            &.active > .level-top,
+            &.has-active > .level-top {
+                color: #000;
+                border: 0;
+            }
+
+            &:last-child > .level-top {
+                padding-right: 0;
+            }
+
+            // no dropdowns
+            > .submenu,
+            &.parent > .level-top > .ui-menu-icon {
+                display: none !important;
+            }
+        }
+    }
+}
+
+//  Mobile: keep Luma's hamburger menu; promo bar scrolls sideways
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .thdr-promo {
+        justify-content: flex-start;
+        height: 38px;
+        padding: 0 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+
+        li:first-child {
+            padding-left: 0;
+        }
+
+        a,
+        a:visited,
+        a:hover {
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    .header.content {
+        .logo img {
+            width: 36px;
+            height: 50px;
+        }
+
+        .thdr-icon--globe,
+        .thdr-icon--locator {
+            display: none;
+        }
+
+        .thdr-icon--account {
+            position: absolute;
+            top: 22px;
+            right: 95px;
+        }
+    }
+}

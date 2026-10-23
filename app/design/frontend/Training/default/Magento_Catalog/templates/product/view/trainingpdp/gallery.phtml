@@ -1,0 +1,37 @@
+<?php
+/**
+ * Stacked image grid (one full-width image followed by two half-width images, repeating)
+ * with the "New Arrival" label on the first image.
+ *
+ * @var \Magento\Catalog\Block\Product\View\Gallery $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$product = $block->getProduct();
+$images = $block->getGalleryImages();
+$from = substr((string)$product->getNewsFromDate(), 0, 10);
+$to = substr((string)$product->getNewsToDate(), 0, 10);
+$today = date('Y-m-d');
+$isNew = ($from || $to) && (!$from || $from <= $today) && (!$to || $to >= $today);
+$index = 0;
+?>
+<div class="tpdp-gallery" data-gallery-role="gallery-placeholder">
+    <?php if ($isNew): ?>
+        <span class="tpdp-gallery__label"><?= $escaper->escapeHtml(__('New Arrival')) ?></span>
+    <?php endif; ?>
+    <?php foreach ($images as $image): ?>
+        <?php $label = $image->getLabel() ?: $product->getName(); ?>
+        <a class="tpdp-gallery__item<?= $index % 3 === 0 ? ' tpdp-gallery__item--wide' : '' ?>"
+           href="<?= $escaper->escapeUrl($image->getData('large_image_url')) ?>" target="_blank" rel="noopener">
+            <img src="<?= $escaper->escapeUrl($image->getData('large_image_url')) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($label) ?>"
+                 <?= $index > 0 ? 'loading="lazy"' : '' ?>/>
+        </a>
+        <?php $index++; ?>
+    <?php endforeach; ?>
+    <?php if ($index === 0): ?>
+        <span class="tpdp-gallery__item tpdp-gallery__item--wide">
+            <img src="<?= $escaper->escapeUrl($block->getImage($product, 'product_page_image_large')->getImageUrl()) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($product->getName()) ?>"/>
+        </span>
+    <?php endif; ?>
+</div>

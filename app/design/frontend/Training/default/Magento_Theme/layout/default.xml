@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * 2xlhome-style header on every page: black promo bar, logo / search / icons row,
+ * and a flat category bar (no dropdowns).
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Black promo bar (editable in Content > Blocks > header_promo_bar) -->
+        <referenceContainer name="header.panel">
+            <block class="Magento\Cms\Block\Block" name="thdr.promo" before="-">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">header_promo_bar</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <!-- Logo size (tall wordmark, like 2xl) -->
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_width" xsi:type="number">58</argument>
+                <argument name="logo_height" xsi:type="number">80</argument>
+            </arguments>
+        </referenceBlock>
+
+        <!-- Globe / account / store-locator icons next to the mini cart -->
+        <referenceContainer name="header-wrapper">
+            <block class="Magento\Framework\View\Element\Template" name="thdr.icons" template="Magento_Theme::html/header-icons.phtml" after="minicart"/>
+        </referenceContainer>
+
+        <referenceBlock name="catalog.compare.link" remove="true"/>
+    </body>
+</page>

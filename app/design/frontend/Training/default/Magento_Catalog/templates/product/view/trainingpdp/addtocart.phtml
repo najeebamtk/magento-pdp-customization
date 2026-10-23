@@ -1,0 +1,52 @@
+<?php
+/**
+ * Core addtocart.phtml with a -/+ quantity stepper around the qty input.
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$product = $block->getProduct();
+$buttonTitle = __('Add to Cart');
+?>
+<?php if ($product->isSaleable()): ?>
+<div class="box-tocart">
+    <div class="fieldset">
+        <?php if ($block->shouldRenderQuantity()): ?>
+        <div class="field qty">
+            <label class="label" for="qty"><span><?= $escaper->escapeHtml(__('Quantity')) ?></span></label>
+            <div class="control tpdp-qty" data-mage-init='{"Magento_Catalog/js/qty-stepper": {}}'>
+                <button type="button" class="tpdp-qty__btn" data-role="qty-minus"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Decrease quantity')) ?>">&minus;</button>
+                <input type="number"
+                       name="qty"
+                       id="qty"
+                       min="1"
+                       value="<?= $block->getProductDefaultQty() * 1 ?>"
+                       title="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>"
+                       class="input-text qty"
+                       data-validate="<?= $escaper->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                       />
+                <button type="button" class="tpdp-qty__btn" data-role="qty-plus"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Increase quantity')) ?>">+</button>
+            </div>
+        </div>
+        <?php endif; ?>
+        <div class="actions">
+            <button type="submit"
+                    title="<?= $escaper->escapeHtmlAttr($buttonTitle) ?>"
+                    class="action primary tocart"
+                    id="product-addtocart-button" disabled>
+                <span><?= $escaper->escapeHtml($buttonTitle) ?></span>
+            </button>
+            <?= $block->getChildHtml('', true) ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>

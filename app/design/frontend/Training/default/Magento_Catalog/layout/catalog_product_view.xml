@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * PDP layout modelled on 2xlhome.com: stacked image grid on the left, buy box on the right with
+ * category + SKU, price, qty stepper, instalment boxes, warehouse info and collapsible sections.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Stacked image grid with "New Arrival" label instead of the fotorama slider -->
+        <referenceBlock name="product.info.media.image" template="Magento_Catalog::product/view/trainingpdp/gallery.phtml"/>
+
+        <!-- Category name above SKU, "(-x% OFF)" after the price -->
+        <referenceContainer name="product.info.price">
+            <block class="Magento\Catalog\Block\Product\View" name="tpdp.category" template="Magento_Catalog::product/view/trainingpdp/category.phtml" before="-"/>
+            <block class="Magento\Catalog\Block\Product\View" name="tpdp.discount" template="Magento_Catalog::product/view/trainingpdp/discount-note.phtml" after="product.price.final"/>
+        </referenceContainer>
+
+        <!-- Quantity stepper (- / +) -->
+        <referenceBlock name="product.info.addtocart" template="Magento_Catalog::product/view/trainingpdp/addtocart.phtml"/>
+        <referenceBlock name="product.info.addtocart.additional" template="Magento_Catalog::product/view/trainingpdp/addtocart.phtml"/>
+
+        <!-- Wishlist heart sits top-right next to the title -->
+        <move element="product.info.social" destination="product.info.main" before="-"/>
+
+        <referenceContainer name="product.info.main">
+            <block class="Magento\Catalog\Block\Product\View" name="tpdp.bnpl" template="Magento_Catalog::product/view/trainingpdp/bnpl.phtml" after="product.info"/>
+            <block class="Magento\Cms\Block\Block" name="tpdp.pickup" after="tpdp.bnpl">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">pdp_pickup_info</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Catalog\Block\Product\View\Attributes" name="tpdp.sections" template="Magento_Catalog::product/view/trainingpdp/sections.phtml" after="tpdp.pickup">
+                <block class="Magento\Cms\Block\Block" name="tpdp.shipping" as="shipping">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">pdp_shipping_returns</argument>
+                    </arguments>
+                </block>
+            </block>
+            <block class="Magento\Cms\Block\Block" name="tpdp.features" after="tpdp.sections">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">pdp_feature_tiles</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <!-- Floating "Top" button -->
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template" name="tpdp.backtop" template="Magento_Catalog::product/view/trainingpdp/back-to-top.phtml"/>
+        </referenceContainer>
+
+        <!-- Description and specifications live in the right column; the bottom tabs (reviews) are not shown -->
+        <referenceBlock name="product.info.details" remove="true"/>
+        <referenceBlock name="product.info.overview" remove="true"/>
+        <referenceBlock name="product.info.mailto" remove="true"/>
+        <referenceBlock name="view.addto.compare" remove="true"/>
+    </body>
+</page>
